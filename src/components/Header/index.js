@@ -8,7 +8,9 @@ const Header = ({ siteTitle }) => (
     <Styled.Container>
       <h1 style={{ margin: 0 }}>{siteTitle}</h1>
       <Styled.Link
-        href={"https://medium.com/p/e518f7d8a9fa/edit"}
+        href={
+          "https://medium.com/@iamjohnhult/stop-right-now-thank-you-very-much-e518f7d8a9fa"
+        }
         target="_blank"
         rel="noopener noreferrer"
       >
