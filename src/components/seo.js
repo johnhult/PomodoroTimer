@@ -19,11 +19,15 @@ function SEO({ description, lang, meta, title }) {
             title
             description
             author
+            url
+            image
           }
         }
       }
     `
   )
+
+  console.log(site)
 
   const metaDescription = description || site.siteMetadata.description
 
@@ -50,6 +54,14 @@ function SEO({ description, lang, meta, title }) {
         {
           property: `og:type`,
           content: `website`,
+        },
+        {
+          name: `og:image`,
+          content: `src/image/icon.png`,
+        },
+        {
+          name: `og:url`,
+          content: site.siteMetadata.url,
         },
         {
           name: `twitter:card`,
