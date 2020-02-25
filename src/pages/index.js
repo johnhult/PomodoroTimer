@@ -6,7 +6,7 @@ import Aside from "src/components/Aside"
 import SEO from "src/components/seo"
 import Timer from "../components/Timer"
 import tomato from "src/images/tomato.png"
-import * as Styled from "./styledPages"
+import * as Styled from "../styles/styledPages"
 import Button from "../components/Button"
 import TimeSlots from "../components/TimeSlots"
 
