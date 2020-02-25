@@ -200,7 +200,8 @@ html {
 }
 body {
   color: hsla(0, 0%, 0%, 0.8);
-  font-family: georgia, serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   font-weight: normal;
   word-wrap: break-word;
   font-kerning: normal;
@@ -619,4 +620,26 @@ pre tt:after {
   html {
     font-size: 100%;
   }
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  color: #4a4d5c;
+  overflow-x: hidden;
+}
+
+#___gatsby {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#gatsby-focus-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
