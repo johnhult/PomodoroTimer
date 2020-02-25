@@ -6,6 +6,7 @@ module.exports = {
     description: `Take your time. Literally.`,
     author: `@iamjohnhult`,
   },
+
   plugins: [
     `gatsby-plugin-react-helmet`,
     {

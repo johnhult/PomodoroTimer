@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react"
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import confetti from "canvas-confetti"
 
 import Layout from "src/components/Layout"
@@ -12,7 +12,7 @@ import TimeSlots from "../components/TimeSlots"
 
 const IndexPage = () => {
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(false)
-  const [onePomodoro] = useState(25 * 60)
+  const [onePomodoro] = useState(3)
   const [celebrate, setCelebrate] = useState(false)
   const [time, setTime] = useState(onePomodoro)
   const [timerActive, setTimerActive] = useState(false)
@@ -84,10 +84,12 @@ const IndexPage = () => {
         renotify: true,
       })
     }
+
     let end = performance.now() + 3 * 1000
 
     let colors = ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
 
+    // custom component using shopify client-side libraries
     const frame = () => {
       confetti({
         particleCount: 5,
