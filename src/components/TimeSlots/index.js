@@ -3,10 +3,9 @@ import PropTypes from "prop-types"
 
 import dragndrop from "src/images/dragndrop.svg"
 import * as Styled from "./style"
-import Button from "../Button"
 import Flex from "../Flex"
 
-export const TimeSlots = ({ pomodoros, ...props }) => {
+export const TimeSlots = ({ pomodoros, setNrOfTasks, ...props }) => {
   const [tasks, setTasks] = useState([""])
   const [minimalisticView, setMinimalisticView] = useState(null)
   const dragIndex = useRef()
@@ -24,10 +23,8 @@ export const TimeSlots = ({ pomodoros, ...props }) => {
       initTasks = JSON.parse(initTasks)
       setTasks(initTasks)
     }
-    if (minView) {
-      minView = minView === "true"
-      setMinimalisticView(minView)
-    }
+    minView = !(minView === "false")
+    setMinimalisticView(minView)
   }, [])
 
   useEffect(() => {
@@ -35,7 +32,8 @@ export const TimeSlots = ({ pomodoros, ...props }) => {
       let addNewArea = [...tasks, ""]
       setTasks(addNewArea)
     }
-  }, [tasks])
+    setNrOfTasks(tasks.length)
+  }, [tasks, setNrOfTasks])
 
   const handleChange = (val, index) => {
     let arr = [...tasks]
@@ -97,15 +95,19 @@ export const TimeSlots = ({ pomodoros, ...props }) => {
         <Styled.ResetButton onClick={clearTasks}>
           Clear Tasks
         </Styled.ResetButton>
-        <Styled.MinWrapper>
-          <Styled.ShowOrHide>Show Done</Styled.ShowOrHide>
-          <Styled.ShowMin
-            minimalisticView={minimalisticView}
-            onClick={() => setMinimalisticView(!minimalisticView)}
-          >
-            <Styled.Toggle minimalisticView={minimalisticView}></Styled.Toggle>
-          </Styled.ShowMin>
-        </Styled.MinWrapper>
+        {minimalisticView !== null && (
+          <Styled.MinWrapper>
+            <Styled.ShowOrHide>Show Done</Styled.ShowOrHide>
+            <Styled.ShowMin
+              minimalisticView={minimalisticView}
+              onClick={() => setMinimalisticView(!minimalisticView)}
+            >
+              <Styled.Toggle
+                minimalisticView={minimalisticView}
+              ></Styled.Toggle>
+            </Styled.ShowMin>
+          </Styled.MinWrapper>
+        )}
       </Flex>
       <div>
         {tasks.map((task, index) => (
@@ -125,7 +127,16 @@ export const TimeSlots = ({ pomodoros, ...props }) => {
               ></Styled.DragButton>
             </Styled.DnDWrapper>
             {index < pomodoros && minimalisticView && tasks[index] !== "" && (
-              <Styled.DoneText>Done 🎉</Styled.DoneText>
+              <Styled.DoneText>
+                Done{" "}
+                <span
+                  role="img"
+                  aria-label="confetti emoji"
+                  alt="confetti emoji"
+                >
+                  🎉
+                </span>
+              </Styled.DoneText>
             )}
             {(!(index < pomodoros && minimalisticView) ||
               tasks[index] === "") && (
@@ -146,6 +157,9 @@ export const TimeSlots = ({ pomodoros, ...props }) => {
   )
 }
 
-TimeSlots.propTypes = {}
+TimeSlots.propTypes = {
+  pomodoros: PropTypes.number,
+  setNrOfTasks: PropTypes.func,
+}
 
 export default TimeSlots

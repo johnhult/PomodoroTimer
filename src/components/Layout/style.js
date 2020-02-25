@@ -1,7 +1,6 @@
 import styled from "styled-components"
 import Colors from "../../tokens/colors"
 import Flex from "../Flex"
-import IconButton from "../IconButton"
 
 export const Main = styled.main`
   flex: 1;

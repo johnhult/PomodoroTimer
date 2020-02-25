@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import confetti from "canvas-confetti"
 
 import Layout from "src/components/Layout"
@@ -12,12 +12,51 @@ import TimeSlots from "../components/TimeSlots"
 
 const IndexPage = () => {
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(false)
-  const [onePomodoro] = useState(3)
+  const [onePomodoro] = useState(25 * 60)
   const [celebrate, setCelebrate] = useState(false)
   const [time, setTime] = useState(onePomodoro)
   const [timerActive, setTimerActive] = useState(false)
   const [pomodoros, setPomodoros] = useState(0)
+  const [nrOfTasks, setNrOfTasks] = useState(null)
   const animFrame = useRef()
+
+  const stopTimer = useCallback(
+    natural => {
+      cancelAnimationFrame(animFrame.current)
+      animFrame.current = null
+      setTimerActive(false)
+      if (natural) {
+        setCelebrate(true)
+        setTimeout(() => {
+          setTime(onePomodoro)
+          setCelebrate(false)
+        }, 3000)
+        setPomodoros(prevPoms => prevPoms + 1)
+        confettiAndShit()
+      } else {
+        setTime(onePomodoro)
+      }
+    },
+    [onePomodoro]
+  )
+
+  const animate = useCallback(
+    timestamp => {
+      let newestTime = performance.now()
+      animFrame.current = requestAnimationFrame(() => {
+        animate(newestTime)
+      })
+      const deltaTime = newestTime - timestamp
+      setTime(prevTime => {
+        const newTime = prevTime - deltaTime * 0.001
+        if (newTime <= 0) {
+          stopTimer(true)
+        }
+        return newTime
+      })
+    },
+    [stopTimer]
+  )
 
   useEffect(() => {
     if (!timerActive) {
@@ -28,22 +67,7 @@ const IndexPage = () => {
       animate(timestamp)
     })
     return () => cancelAnimationFrame(animFrame.current)
-  }, [timerActive])
-
-  const animate = timestamp => {
-    let newestTime = performance.now()
-    animFrame.current = requestAnimationFrame(() => {
-      animate(newestTime)
-    })
-    const deltaTime = newestTime - timestamp
-    setTime(prevTime => {
-      const newTime = prevTime - deltaTime * 0.001
-      if (newTime <= 0) {
-        stopTimer(true)
-      }
-      return newTime
-    })
-  }
+  }, [timerActive, animate])
 
   const startTimer = async () => {
     if (Notification.permission === "default" && "Notification" in window) {
@@ -53,29 +77,11 @@ const IndexPage = () => {
     }
   }
 
-  const stopTimer = natural => {
-    cancelAnimationFrame(animFrame.current)
-    animFrame.current = null
-    setTimerActive(false)
-    if (natural) {
-      setCelebrate(true)
-      setTimeout(() => {
-        setTime(onePomodoro)
-        setCelebrate(false)
-      }, 3000)
-      setPomodoros(prevPoms => prevPoms + 1)
-      confettiAndShit()
-    } else {
-      setTime(onePomodoro)
-    }
-  }
-
   const confettiAndShit = () => {
     if ("Notification" in window) {
       // API supported
-      let notification = new Notification("Pomodoro Done!", {
-        body:
-          "You completed a Pomodoro! Go take a 5 minute break. You earned it!",
+      new Notification("Pomodoro Done!", {
+        body: "You completed a Pomodoro! Go take a break. You earned it!",
         tag: "Pomodoro",
         icon: tomato,
         image: tomato,
@@ -131,11 +137,15 @@ const IndexPage = () => {
       />
       <Styled.Flexer am flex="1" width="960px">
         <Aside
+          nrOfTasks={nrOfTasks}
           pomodoros={pomodoros}
           setPomodoros={setPomodoros}
           timerActive={timerActive}
         ></Aside>
-        <TimeSlots pomodoros={pomodoros}></TimeSlots>
+        <TimeSlots
+          pomodoros={pomodoros}
+          setNrOfTasks={setNrOfTasks}
+        ></TimeSlots>
       </Styled.Flexer>
       {showNotificationPrompt && (
         <Styled.Prompt>

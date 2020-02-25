@@ -6,7 +6,7 @@ import * as Styled from "./style"
 export const IconButton = ({ onClick, src, children, ...props }) => {
   return (
     <Styled.Button onClick={onClick} {...props}>
-      <img src={src}></img>
+      <img src={src} alt={`icon of ${src}`}></img>
       {children}
     </Styled.Button>
   )

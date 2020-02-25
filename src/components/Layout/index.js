@@ -33,28 +33,34 @@ const Layout = ({ children }) => {
       <Header siteTitle={data.site.siteMetadata.title} />
       <Styled.Main>{children}</Styled.Main>
       <Styled.Footer>
-        <Styled.MadeBy>Made with ❤️ by @iamjohnhult</Styled.MadeBy>
+        <Styled.MadeBy>
+          Made with{" "}
+          <span role="img" aria-label="heart emoji" alt="heart emoji">
+            ❤️
+          </span>{" "}
+          by @iamjohnhult
+        </Styled.MadeBy>
         <Styled.Social>
           <Styled.SocialButton
             href="https://twitter.com/iamjohnhult"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src={twitter}></img>
+            <img src={twitter} alt="icon of social media"></img>
           </Styled.SocialButton>
           <Styled.SocialButton
             href="https://instagram.com/iamjohnhult/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src={insta}></img>
+            <img src={insta} alt="icon of social media"></img>
           </Styled.SocialButton>
           <Styled.SocialButton
             href="https://medium.com/@iamjohnhult"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src={medium}></img>
+            <img src={medium} alt="icon of social media"></img>
           </Styled.SocialButton>
         </Styled.Social>
       </Styled.Footer>

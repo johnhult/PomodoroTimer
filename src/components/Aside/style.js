@@ -79,7 +79,6 @@ export const Modal = styled.form`
   display: flex;
   margin: 0;
   padding: 0;
-  /* background-color: ${Colors.base}; */
   input {
     width: 100%;
     outline: 0;

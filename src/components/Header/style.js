@@ -1,6 +1,5 @@
 import styled from "styled-components"
 import Colors from "src/tokens/colors"
-import { Button } from "../Button/style"
 
 export const Header = styled.header`
   padding: 20px 5%;

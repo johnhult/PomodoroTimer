@@ -4,11 +4,10 @@ import tomato from "src/images/tomato.svg"
 import dots from "src/images/dots.svg"
 import check from "src/images/check.svg"
 import * as Styled from "./style"
-import Flex from "../Flex"
 import IconButton from "../IconButton"
 import useOnClickOutside from "../../hooks/useOnClickOutside"
 
-export const Aside = ({ timerActive, pomodoros, setPomodoros }) => {
+export const Aside = ({ timerActive, pomodoros, setPomodoros, nrOfTasks }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [inputVal, setInputVal] = useState("")
   const [error, setError] = useState("")
@@ -19,18 +18,40 @@ export const Aside = ({ timerActive, pomodoros, setPomodoros }) => {
 
   useOnClickOutside(closeOutsideRef, () => closeModalAndSet(null, true))
 
-  const handleUserKeyPress = useCallback(event => {
-    const { key, keyCode } = event
-
-    if (keyCode === 27 || key === "Escape") {
-      closeModalAndSet(null, true)
-    }
-    if (inputRef.current.id === document.activeElement.id) {
-      if (keyCode === 38 || key === "ArrowUp") {
-      } else if (keyCode === 40 || key === "ArrowDown") {
+  const closeModalAndSet = useCallback(
+    async (e, closeOverride) => {
+      if (e) {
+        e.preventDefault()
       }
-    }
-  }, [])
+      setError("")
+      if (inputVal !== "") {
+        let val = parseInt(inputVal)
+        if (val > 48 && !closeOverride) {
+          setError("Too many Pomodoros you crazy kid! Maximum 48!")
+          inputRef.current.focus()
+          return
+        }
+        if (!closeOverride) {
+          await setPomodoros(val)
+        }
+        await setInputVal("")
+        inputRef.current.blur()
+      }
+      setModalOpen(false)
+    },
+    [inputVal, setPomodoros]
+  )
+
+  const handleUserKeyPress = useCallback(
+    event => {
+      const { key, keyCode } = event
+
+      if (keyCode === 27 || key === "Escape") {
+        closeModalAndSet(null, true)
+      }
+    },
+    [closeModalAndSet]
+  )
 
   useEffect(() => {
     window.addEventListener("keydown", handleUserKeyPress)
@@ -38,11 +59,19 @@ export const Aside = ({ timerActive, pomodoros, setPomodoros }) => {
     return () => {
       window.removeEventListener("keydown", handleUserKeyPress)
     }
-  }, [])
+  }, [handleUserKeyPress])
 
   const pomodorosArr = useMemo(() => {
     return [...Array(pomodoros).keys()]
   }, [pomodoros])
+
+  const nrOfTasksArr = useMemo(() => {
+    return [
+      ...Array(
+        nrOfTasks - 2 - pomodoros < 0 ? 0 : nrOfTasks - 1 - pomodoros
+      ).keys(),
+    ]
+  }, [nrOfTasks, pomodoros])
 
   const changeInput = val => {
     if (val.match(/\D/)) {
@@ -63,42 +92,29 @@ export const Aside = ({ timerActive, pomodoros, setPomodoros }) => {
     inputRef.current.focus()
   }
 
-  const closeModalAndSet = async (e, closeOverride) => {
-    if (e) {
-      e.preventDefault()
-    }
-    setError("")
-    if (inputVal !== "") {
-      let val = parseInt(inputVal)
-      if (val > 48 && !closeOverride) {
-        setError("Too many Pomodoros you crazy kid! Maximum 48!")
-        inputRef.current.focus()
-        return
-      }
-      if (!closeOverride) {
-        await setPomodoros(val)
-      }
-      await setInputVal("")
-      inputRef.current.blur()
-    }
-    setModalOpen(false)
-  }
-
   return (
     <Styled.Aside>
       <h4>Pomodoros</h4>
       <Styled.PomodorosWrapper wr>
         {pomodorosArr.map((item, index) => (
           <Styled.Img
-            className={(index + 1) % 4 === 0 ? "noMargin" : ""}
             key={`tomato-${index}`}
             src={tomato}
             alt="A tomato icon"
           ></Styled.Img>
         ))}
-        {(pomodoros === 0 || timerActive) && (
-          <Styled.Img lowOpa src={tomato} alt="A tomato icon"></Styled.Img>
-        )}
+        {(pomodoros === 0 || (timerActive && nrOfTasks - 1 <= pomodoros)) &&
+          !(nrOfTasks - 1 > pomodoros) && (
+            <Styled.Img lowOpa src={tomato} alt="A tomato icon"></Styled.Img>
+          )}
+        {nrOfTasksArr.map((item, index) => (
+          <Styled.Img
+            lowOpa
+            key={`tomato-${index}`}
+            src={tomato}
+            alt="A tomato icon"
+          ></Styled.Img>
+        ))}
       </Styled.PomodorosWrapper>
       <Styled.Wrapper>
         <Styled.Flexer modalOpen={modalOpen} forwardRef={grabWidthRef}>
