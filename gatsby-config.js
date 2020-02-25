@@ -5,7 +5,7 @@ module.exports = {
     title: `Pomodoro Timer`,
     description: `Take your time. Literally.`,
     url: `https://pomodorotime.netlify.com`,
-    image: `${path.join(__dirname, "src/images")}/icon.png`,
+    image: `${path.join(__dirname, "src/images/icon.png")}`,
     author: `@iamjohnhult`,
   },
 
