@@ -624,12 +624,16 @@ pre tt:after {
 
 html {
   height: 100%;
+  background-color: #ebecf0;
 }
 
 body {
+  background-color: #ebecf0;
   height: 100%;
   color: #4a4d5c;
   overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 #___gatsby {
